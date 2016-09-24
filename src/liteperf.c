@@ -14,6 +14,16 @@ static void catchSignals (void){
     sigaction (SIGINT, &action, NULL);
     sigaction (SIGTERM, &action, NULL);
 }
+mrb_value flip_method(mrb_state* mrb, mrb_value self){
+    puts("Flip called");
+    return mrb_nil_value();
+}
+void register_namespace(mrb_state *mrb){
+    struct RClass *root_module;    
+    root_module = mrb_define_module(mrb,"Liteperf");
+    mrb_define_module_function(mrb,root_module,"flip",flip_method,MRB_ARGS_NONE());
+    
+}
 static session screen;
 int main(int argc,const char *argv[]){
 
@@ -29,14 +39,22 @@ int main(int argc,const char *argv[]){
 
     catchSignals(); 
     // Initialize mruby
-       mrb_int i = 99;
-       mrb_state *mrb = mrb_open();
-       if (!mrb) { }
-       FILE *fp = fopen(argv[2],"r");
-       mrb_value obj = mrb_load_file(mrb,fp);
-       mrb_funcall(mrb, obj, "draw", 1, mrb_fixnum_value(i));
-       fclose(fp);
-       mrb_close(mrb);
+    mrb_state *mrb = mrb_open();
+    if (!mrb) { }
+    // Initialize the Liteperf class in mruby
+    register_namespace(mrb);
+
+    // Open and load the script provided as second argument.
+    FILE *fp = fopen(argv[2],"r");
+    mrb_value obj = mrb_load_file(mrb,fp);
+    fclose(fp);
+
+    // call some initialize method?
+    mrb_int i = 99;
+    mrb_funcall(mrb, obj, "draw", 1, mrb_fixnum_value(i));
+    
+    // Destroy the mruby runtime.
+    mrb_close(mrb);
 
     //destroy_fb(&screen);
     return 0;
