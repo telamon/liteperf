@@ -28,7 +28,18 @@ int main(int argc,const char *argv[]){
 
 
     catchSignals(); 
+    // Initialize mruby
+       mrb_int i = 99;
+       mrb_state *mrb = mrb_open();
+       if (!mrb) { }
+       FILE *fp = fopen(argv[2],"r");
+       mrb_value obj = mrb_load_file(mrb,fp);
+       mrb_funcall(mrb, obj, "draw", 1, mrb_fixnum_value(i));
+       fclose(fp);
+       mrb_close(mrb);
 
+    //destroy_fb(&screen);
+    return 0;
 
     /*while(run){
 
@@ -59,6 +70,4 @@ int main(int argc,const char *argv[]){
 
 	    }
     }*/
-    //destroy_fb(&screen);
-    return 0;
 }
