@@ -8,4 +8,4 @@ include_directories("${PROJECT_SOURCE_DIR}/mruby/include/")
 add_library( mruby STATIC IMPORTED )
 set_target_properties( mruby PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/mruby/build/host/lib/libmruby.a )
 
-target_link_libraries (liteperf mruby)
+target_link_libraries (liteperf mruby m)
