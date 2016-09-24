@@ -14,6 +14,7 @@ static void catchSignals (void){
     sigaction (SIGINT, &action, NULL);
     sigaction (SIGTERM, &action, NULL);
 }
+
 mrb_value flip_method(mrb_state* mrb, mrb_value self){
     puts("Flip called");
     return mrb_nil_value();

@@ -6,11 +6,10 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <signal.h>
-
+#include <stdint.h>
 typedef struct {
 	struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
-    long int location;
 	int fbfd;
 	char *fbp;
 	long int screensize;
@@ -22,7 +21,31 @@ void destroy_fb(session *scr){
     close(scr->fbfd);
     printf("\nUnmapped successfully\n");
 }
+#define COORDS_TO_LOC(s,x,y) (((x)+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + ((y)+scr->vinfo.yoffset) * scr->finfo.line_length)
 
+#define RGBA32_TO_BGR16(c) ( ((((c)>>3)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>19)&31) )
+void put_pixel32(session *scr,uint32_t x,uint32_t y,uint32_t rgba){
+	long int location = COORDS_TO_LOC(scr,x,y);
+	*(scr->fbp + location) = (rgba>>16) & 0xff;		// Blue
+	*(scr->fbp + location + 1) = (rgba>>8) & 0xff;	// Green
+	*(scr->fbp + location + 2) =  rgba & 0xff; 		// Red
+	*(scr->fbp + location + 3) = (rgba>>24) & 0xff;	// Alpha
+}
+void fill_screen(session *scr,uint32_t rgba){
+	int x = 0, y = 0;
+    long int location;
+	// Figure out where in memory to put the pixel
+	for (y = 0; y < scr->vinfo.yres; y++)
+	for (x = 0; x < scr->vinfo.xres; x++) {
+	    if (scr->vinfo.bits_per_pixel == 32) {
+	    	put_pixel32(scr,x,y,rgba);
+	    } else  { //assume 16bpp // this is the cloudshell monitor
+	    	// bgr16_565
+			*((unsigned short int*)(scr->fbp + location)) = RGBA32_TO_BGR16(rgba);
+	    }
+	}
+
+}
 void init_fb(char *device,session *scr){
 
     // Open the file for reading and writing
