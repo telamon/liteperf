@@ -17,15 +17,20 @@ typedef struct {
 } session;
 
 
+
+//#define COORDS_TO_LOC(s,x,y) (((x)+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + ((y)+scr->vinfo.yoffset) * scr->finfo.line_length)
+
+#define RGBA32_TO_BGR16(c) ( ((((c)>>3)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>19)&31) )
+
+/******************************************************
+ *** This belongs in framebuffer.c ********************
+ ******************************************************/
 void destroy_fb(session *scr){
-	munmap(scr->front, scr->screensize);
+    munmap(scr->front, scr->screensize);
     close(scr->fbfd);
     free(scr->back);
     printf("\nUnmapped successfully\n");
 }
-//#define COORDS_TO_LOC(s,x,y) (((x)+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + ((y)+scr->vinfo.yoffset) * scr->finfo.line_length)
-
-#define RGBA32_TO_BGR16(c) ( ((((c)>>3)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>19)&31) )
 void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba){
 	long int location = (x+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + (y+scr->vinfo.yoffset) * scr->finfo.line_length;
 	*(scr->back + location) = (rgba>>16) & 0xff;		// Blue

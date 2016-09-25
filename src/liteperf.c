@@ -16,6 +16,10 @@ static void catchSignals (void){
 }
 static session screen;
 
+/******************************************************
+ *** Mruby integration ********************************
+ ******************************************************/
+
 mrb_value flip_method(mrb_state* mrb, mrb_value self){
     blit(&screen);
     return mrb_nil_value();
@@ -27,7 +31,7 @@ mrb_value draw_image_method(mrb_state* mrb,mrb_value self){
     uint sx,sy,sw,sh,dx,dy;
     mrb_bool opts_set;
 
-    mrb_get_args(mrb_state,"s?H!",filename,&opts_set,&opts);    
+    mrb_get_args(mrb,"s?H!",filename, &opts_set, &opts);    
     if(opts_set){
         
     }
@@ -41,6 +45,10 @@ void register_namespace(mrb_state *mrb){
     mrb_define_module_function(mrb,root_module,"draw_image",flip_method,MRB_ARGS_ARG(1,1));
 
 }
+
+/******************************************************
+ *** Entrypoint ***************************************
+ ******************************************************/
 
 int main(int argc,const char *argv[]){
 
