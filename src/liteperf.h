@@ -31,22 +31,23 @@ void put_pixel32(session *scr,uint32_t x,uint32_t y,uint32_t rgba){
 	*(scr->fbp + location + 2) =  rgba & 0xff; 		// Red
 	*(scr->fbp + location + 3) = (rgba>>24) & 0xff;	// Alpha
 }
-void fill_screen(session *scr,uint32_t rgba){
-	int x = 0, y = 0;
-    long int location;
+void fill_screen(session *scr,unsigned long rgba){
+  int x = 0, y = 0;
+  long int location;
 	// Figure out where in memory to put the pixel
 	for (y = 0; y < scr->vinfo.yres; y++)
 	for (x = 0; x < scr->vinfo.xres; x++) {
-	    if (scr->vinfo.bits_per_pixel == 32) {
-	    	put_pixel32(scr,x,y,rgba);
-	    } else  { //assume 16bpp // this is the cloudshell monitor
-	    	// bgr16_565
-			*((unsigned short int*)(scr->fbp + location)) = RGBA32_TO_BGR16(rgba);
-	    }
+    location = (x+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + (y+scr->vinfo.yoffset) * scr->finfo.line_length;
+
+    if (scr->vinfo.bits_per_pixel == 32) {
+      put_pixel32(scr,x,y,rgba);
+    } else  { //assume 16bpp bgr565 // this is the cloudshell monitor
+      *((unsigned short int*)(scr->fbp + location)) = RGBA32_TO_BGR16(rgba);
+    }
 	}
 
 }
-void init_fb(char *device,session *scr){
+void init_fb(const char *device,session *scr){
 
     // Open the file for reading and writing
     scr->fbfd = open(device, O_RDWR);
