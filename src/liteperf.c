@@ -34,7 +34,7 @@ int main(int argc,const char *argv[]){
     }
     //printf("Argc: %d \tA1: %s\tA2: %s\tA3: %s\n",argc,argv[0],argv[1],argv[2]);
 
-
+    // Allocate the framebuffer.
     init_fb(argv[1],&screen);
 
 
@@ -54,12 +54,16 @@ int main(int argc,const char *argv[]){
     mrb_int i = 99;
     mrb_funcall(mrb, obj, "draw", 1, mrb_fixnum_value(i));
 
+
+    // Paint pretty colors.
+    while(run){
+        fill_screen(&screen,rand() & 0xffffffff);
+        blit(&screen);
+        sleep(1);
+    }
     // Destroy the mruby runtime.
     mrb_close(mrb);
-    while(run){
-      fill_screen(&screen,rand() & 0xffffffff);
-      sleep(1);
-    }
+    // Release the framebuffer.
     destroy_fb(&screen);
     return 0;
 
