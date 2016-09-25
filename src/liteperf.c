@@ -14,18 +14,34 @@ static void catchSignals (void){
     sigaction (SIGINT, &action, NULL);
     sigaction (SIGTERM, &action, NULL);
 }
+static session screen;
 
 mrb_value flip_method(mrb_state* mrb, mrb_value self){
-    puts("Flip called");
+    blit(&screen);
     return mrb_nil_value();
 }
+
+mrb_value draw_image_method(mrb_state* mrb,mrb_value self){
+    char *filename;    
+    mrb_value opts;
+    uint sx,sy,sw,sh,dx,dy;
+    mrb_bool opts_set;
+
+    mrb_get_args(mrb_state,"s?H!",filename,&opts_set,&opts);    
+    if(opts_set){
+        
+    }
+    
+}
+
 void register_namespace(mrb_state *mrb){
     struct RClass *root_module;    
     root_module = mrb_define_module(mrb,"Liteperf");
     mrb_define_module_function(mrb,root_module,"flip",flip_method,MRB_ARGS_NONE());
+    mrb_define_module_function(mrb,root_module,"draw_image",flip_method,MRB_ARGS_ARG(1,1));
 
 }
-static session screen;
+
 int main(int argc,const char *argv[]){
 
     if(argc<3){
