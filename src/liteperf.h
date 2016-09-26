@@ -44,7 +44,20 @@ void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba){
 	*(scr->back + location + 3) = (rgba>>24) & 0xff;	// Alpha
 }
 
-void put_pixel(session *scr,unsigned int x, unsigned int y, unsigned int color){
+#define put_pixel16(scr,x,y,color) \
+( \
+    *((unsigned short int*)((scr)->back + ( (x) * ( (scr)->vinfo.bits_per_pixel/8) + (y) * (scr)->finfo.line_length) )) \
+    = RGBA32_TO_RGB16(color) \
+)
+
+#define put_pixel(scr,x,y,color) \
+( \
+    (scr)->vinfo.bits_per_pixel==32 ? put_pixel32((scr),(x),(y),(color)) : put_pixel16((scr),(x),(y),(color)) \
+)
+
+
+/*
+inline void put_pixel(session *scr,unsigned int x, unsigned int y, unsigned int color){
     if (scr->vinfo.bits_per_pixel == 32) {
         put_pixel32(scr,x,y,color);
     } else  { //assume 16bpp bgr565 // this is the cloudshell monitor
@@ -53,7 +66,7 @@ void put_pixel(session *scr,unsigned int x, unsigned int y, unsigned int color){
         *((unsigned short int*)(scr->back + location)) = RGBA32_TO_RGB16(color);
     }
     
-}
+}*/
 
 void draw_square(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsigned int h,unsigned int rgba){
     for(int y = oy;y<h+oy;y++)

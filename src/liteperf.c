@@ -38,7 +38,7 @@ mrb_value draw_image_method(mrb_state* mrb,mrb_value self){
     
 }
 
-void register_namespace(mrb_state *mrb){
+void initialize_mrb_namespace(mrb_state *mrb){
     struct RClass *root_module;    
     root_module = mrb_define_module(mrb,"Liteperf");
     mrb_define_module_function(mrb,root_module,"flip",flip_method,MRB_ARGS_NONE());
@@ -67,7 +67,7 @@ int main(int argc,const char *argv[]){
     mrb_state *mrb = mrb_open();
     if (!mrb) { }
     // Initialize the Liteperf class in mruby
-    register_namespace(mrb);
+    initialize_mrb_namespace(mrb);
 
     // Open and load the script provided as second argument.
     FILE *fp = fopen(argv[2],"r");
@@ -76,18 +76,18 @@ int main(int argc,const char *argv[]){
 
     // call some initialize method?
     mrb_int i = 99;
-    mrb_funcall(mrb, obj, "draw", 1, mrb_fixnum_value(i));
+    mrb_funcall(mrb, obj, "setup", 1, mrb_fixnum_value(i));
 
 
     // Paint pretty colors.
     int k=0;
     while(run){
         fill_screen(&screen,rand() & 0xffffffff);
-
         draw_square(&screen,100+k,30,50,60+k,0x541212);
         k=(k+10)%50;
         blit(&screen);
         sleep(1);
+        mrb_funcall(mrb, obj, "loop", 1, mrb_fixnum_value(i));
     }
     // Destroy the mruby runtime.
     mrb_close(mrb);
