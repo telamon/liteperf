@@ -80,8 +80,12 @@ int main(int argc,const char *argv[]){
 
 
     // Paint pretty colors.
+    int k=0;
     while(run){
         fill_screen(&screen,rand() & 0xffffffff);
+
+        draw_square(&screen,100+k,30,50,60+k,0x541212);
+        k=(k+10)%50;
         blit(&screen);
         sleep(1);
     }

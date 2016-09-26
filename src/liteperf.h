@@ -20,7 +20,9 @@ typedef struct {
 
 //#define COORDS_TO_LOC(s,x,y) (((x)+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + ((y)+scr->vinfo.yoffset) * scr->finfo.line_length)
 
+// 565 format.
 #define RGBA32_TO_BGR16(c) ( ((((c)>>3)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>19)&31) )
+#define RGBA32_TO_RGB16(c) ( ((((c)>>19)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>3)&31) )
 
 /******************************************************
  *** This belongs in framebuffer.c ********************
@@ -31,6 +33,9 @@ void destroy_fb(session *scr){
     free(scr->back);
     printf("\nUnmapped successfully\n");
 }
+void blit(session *scr){
+    memcpy(scr->front,scr->back,scr->screensize);
+}
 void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba){
 	long int location = (x+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + (y+scr->vinfo.yoffset) * scr->finfo.line_length;
 	*(scr->back + location) = (rgba>>16) & 0xff;		// Blue
@@ -38,22 +43,32 @@ void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba){
 	*(scr->back + location + 2) =  rgba & 0xff; 		// Red
 	*(scr->back + location + 3) = (rgba>>24) & 0xff;	// Alpha
 }
-void blit(session *scr){
-    memcpy(scr->front,scr->back,scr->screensize);
+
+void put_pixel(session *scr,unsigned int x, unsigned int y, unsigned int color){
+    if (scr->vinfo.bits_per_pixel == 32) {
+        put_pixel32(scr,x,y,color);
+    } else  { //assume 16bpp bgr565 // this is the cloudshell monitor
+        //location = (x+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + (y+scr->vinfo.yoffset) * scr->finfo.line_length;
+        long int location = x * (scr->vinfo.bits_per_pixel/8) + y * scr->finfo.line_length;
+        *((unsigned short int*)(scr->back + location)) = RGBA32_TO_RGB16(color);
+    }
+    
 }
+
+void draw_square(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsigned int h,unsigned int rgba){
+    for(int y = oy;y<h+oy;y++)
+    for(int x = ox;x<w+ox;x++){
+        put_pixel(scr,x,y,rgba);
+    };
+}
+
 void fill_screen(session *scr,unsigned int rgba){
     int x = 0, y = 0;
-    long int location;
+    
     // Figure out where in memory to put the pixel
     for (y = 0; y < scr->vinfo.yres; y++)
     for (x = 0; x < scr->vinfo.xres; x++) {
-
-        if (scr->vinfo.bits_per_pixel == 32) {
-            put_pixel32(scr,x,y,rgba);
-        } else  { //assume 16bpp bgr565 // this is the cloudshell monitor
-            location = (x+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + (y+scr->vinfo.yoffset) * scr->finfo.line_length;
-            *((unsigned short int*)(scr->back + location)) = RGBA32_TO_BGR16(rgba);
-        }
+        put_pixel(scr,x,y,rgba);
     }
 
 }
