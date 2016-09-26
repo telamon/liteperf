@@ -7,6 +7,11 @@
 #include <sys/ioctl.h>
 #include <signal.h>
 #include <string.h>
+
+
+
+typedef unsigned char uint8_t;
+
 typedef struct {
 	struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
@@ -16,6 +21,14 @@ typedef struct {
     char *back;
 } session;
 
+typedef struct
+{
+    uint8_t* font;
+    uint8_t x_size;
+    uint8_t y_size;
+    uint8_t offset;
+    uint8_t numchars;
+} font_info;
 
 
 //#define COORDS_TO_LOC(s,x,y) (((x)+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + ((y)+scr->vinfo.yoffset) * scr->finfo.line_length)
@@ -55,18 +68,51 @@ void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba){
     (scr)->vinfo.bits_per_pixel==32 ? put_pixel32((scr),(x),(y),(color)) : put_pixel16((scr),(x),(y),(color)) \
 )
 
+font_info* create_font_info(unsigned char* font){
+    font_info* cfont = (font_info*) malloc(sizeof(font_info));
+    cfont->font=font;
+    cfont->x_size = font[0];
+    cfont->y_size = font[1];
+    cfont->offset = font[2];
+    cfont->numchars = font[3];
+    return cfont;
+}
 
-/*
-inline void put_pixel(session *scr,unsigned int x, unsigned int y, unsigned int color){
-    if (scr->vinfo.bits_per_pixel == 32) {
-        put_pixel32(scr,x,y,color);
-    } else  { //assume 16bpp bgr565 // this is the cloudshell monitor
-        //location = (x+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + (y+scr->vinfo.yoffset) * scr->finfo.line_length;
-        long int location = x * (scr->vinfo.bits_per_pixel/8) + y * scr->finfo.line_length;
-        *((unsigned short int*)(scr->back + location)) = RGBA32_TO_RGB16(color);
+void draw_char(session *scr,font_info* cfont,unsigned char c,int x, int y){
+    /* I have completley no clue how this method works; borrowed it from UTFT but was too lazy
+    to try and figure it out, got it working with some minor adjustments and redundant -8's
+    */
+    unsigned char i,ch;
+    int j;
+    int temp; 
+    int bwidth=cfont->x_size/8;
+
+    temp= ((c-cfont->offset) * (bwidth*cfont->y_size)) + 4;
+
+    for(j=0 ; j < (bwidth*cfont->y_size) ; j += bwidth){
+        int x1= x;
+        int y1= y + ( j / bwidth );
+        int x2= x + cfont->x_size-1;
+        int y2= y + ( j / bwidth );
+        
+        for( int zz = bwidth - 1 ; zz >= 0 ; zz-- ){
+            ch = *( &cfont->font[temp+zz] );
+
+            for( i = 0 ; i < 8 ; i++ ){   
+                if( (ch & (1<<i) ) !=0 ){
+                    put_pixel(scr,x1+x2-i+zz*8-8,y1,0xff00ff); // draw frontcolor
+                }else{
+                    put_pixel(scr,x1+x2-i+zz*8-8,y1,0x000000); // draw back-color
+                } 
+            }
+        
+        }
+        temp+= bwidth;
+        
     }
-    
-}*/
+    //clrXY();
+
+}
 
 void draw_square(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsigned int h,unsigned int rgba){
     for(int y = oy;y<h+oy;y++)

@@ -1,6 +1,7 @@
 #include "liteperf.h"
 #include <mruby.h>
 #include <mruby/compile.h>
+#include "arial_bold.c"
 
 static int run=1;
 static void exitHandler(int s){
@@ -57,7 +58,7 @@ int main(int argc,const char *argv[]){
         return 1;
     }
     //printf("Argc: %d \tA1: %s\tA2: %s\tA3: %s\n",argc,argv[0],argv[1],argv[2]);
-
+    font_info* font= create_font_info(&arial_bold);
     // Allocate the framebuffer.
     init_fb(argv[1],&screen);
 
@@ -85,6 +86,9 @@ int main(int argc,const char *argv[]){
         fill_screen(&screen,rand() & 0xffffffff);
         draw_square(&screen,100+k,30,50,60+k,0x541212);
         k=(k+10)%50;
+        draw_char(&screen,font,'A',0,0);
+        draw_char(&screen,font,'C',24,0);
+        draw_char(&screen,font,'9',48,0);
         blit(&screen);
         sleep(1);
         mrb_funcall(mrb, obj, "loop", 1, mrb_fixnum_value(i));
