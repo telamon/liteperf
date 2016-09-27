@@ -96,6 +96,8 @@ void initialize_mrb_namespace(mrb_state *mrb){
     mrb_define_module_function(mrb,root_module,"foreground_color",get_fgcolor_method,MRB_ARGS_NONE());
     //mrb_define_module_function(mrb,root_module,"draw_image",flip_method,MRB_ARGS_ARG(1,1));
 
+    // TODO: export current session info (vsize/hsize) as constants.
+
 }
 
 /******************************************************
@@ -138,7 +140,9 @@ int main(int argc,const char *argv[]){
     // Destroy the mruby runtime.
     mrb_close(mrb);
     // Release the framebuffer.
+    free(font);
     destroy_fb(&screen);
+
     return 0;
 
 }
