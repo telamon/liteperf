@@ -19,6 +19,8 @@ typedef struct {
 	char *front;
 	long int screensize;
     char *back;
+    unsigned int fg_color;
+    unsigned int bg_color;
 } session;
 
 typedef struct
@@ -100,9 +102,9 @@ void draw_char(session *scr,font_info* cfont,unsigned char c,int x, int y){
 
             for( i = 0 ; i < 8 ; i++ ){   
                 if( (ch & (1<<i) ) !=0 ){
-                    put_pixel(scr,x1+x2-i+zz*8-8,y1,0xff00ff); // draw frontcolor
+                    put_pixel(scr,x1+x2-i+zz*8-8,y1,scr->fg_color); // draw frontcolor
                 }else{
-                    put_pixel(scr,x1+x2-i+zz*8-8,y1,0x000000); // draw back-color
+                    put_pixel(scr,x1+x2-i+zz*8-8,y1,scr->bg_color); // draw back-color
                 } 
             }
         
@@ -113,15 +115,28 @@ void draw_char(session *scr,font_info* cfont,unsigned char c,int x, int y){
     //clrXY();
 
 }
+void draw_text(session* scr,font_info* cfont,const unsigned char* string,int x, int y){
+    int oy=0;
+    int ox=0;
+    for(int i=0; i< strlen(string); i++){
+        ox+=cfont->x_size>>1;
+        if(string[i]=='\n'){
+            ox=0;
+            oy+=cfont->y_size;
+        }else{
+            draw_char(scr,cfont,string[i],x+ox,y+oy);
+        }
+    }
+}
 
-void draw_square(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsigned int h,unsigned int rgba){
+void draw_rect(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsigned int h,unsigned int rgba){
     for(int y = oy;y<h+oy;y++)
     for(int x = ox;x<w+ox;x++){
         put_pixel(scr,x,y,rgba);
     };
 }
 
-void fill_screen(session *scr,unsigned int rgba){
+void fill_screen(session* scr,unsigned int rgba){
     int x = 0, y = 0;
     
     // Figure out where in memory to put the pixel
@@ -130,6 +145,9 @@ void fill_screen(session *scr,unsigned int rgba){
         put_pixel(scr,x,y,rgba);
     }
 
+}
+void clear_screen(session* scr){
+    fill_screen(scr,scr->bg_color);
 }
 
 void init_fb(const char *device,session *scr){

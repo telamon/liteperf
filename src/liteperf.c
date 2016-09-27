@@ -16,7 +16,7 @@ static void catchSignals (void){
     sigaction (SIGTERM, &action, NULL);
 }
 static session screen;
-
+static font_info* font;
 /******************************************************
  *** Mruby integration ********************************
  ******************************************************/
@@ -38,12 +38,63 @@ mrb_value draw_image_method(mrb_state* mrb,mrb_value self){
     }
     
 }
+mrb_value clear_screen_method(mrb_state* mrb,mrb_value self){
+    clear_screen(&screen);
+    return mrb_nil_value();
+}
 
+mrb_value draw_rect_method(mrb_state* mrb,mrb_value self){
+    mrb_int x,y,w,h,color;
+    mrb_bool color_set=FALSE;
+    mrb_get_args(mrb,"iiiii?",&x,&y,&w,&h,&color,&color_set);
+    if(!color_set)
+        color= screen.fg_color;
+
+    draw_rect(&screen,x,y,w,h,color);
+    return mrb_nil_value();
+}
+mrb_value draw_text_method(mrb_state* mrb,mrb_value self){
+    char* text;
+    mrb_int x,y,color;    
+    mrb_bool color_set=FALSE;
+
+    mrb_get_args(mrb,"zii",&text,&x,&y);
+    draw_text(&screen,font,text,x,y);
+    return mrb_nil_value();
+}
+mrb_value get_fgcolor_method(mrb_state* mrb,mrb_value self){
+    return mrb_fixnum_value(screen.fg_color);
+}
+mrb_value get_bgcolor_method(mrb_state* mrb,mrb_value self){
+    printf("bg_getter called\n");
+    return mrb_fixnum_value(screen.bg_color);
+}
+mrb_value set_fgcolor_method(mrb_state* mrb,mrb_value self){
+    mrb_int color;
+    mrb_get_args(mrb,"i",color);
+
+    screen.fg_color = color;
+    return mrb_fixnum_value(color);
+}
+mrb_value set_bgcolor_method(mrb_state* mrb,mrb_value self){
+    mrb_int color;
+    mrb_get_args(mrb,"i",&color);
+    printf("set_bgcolor_method  %08x\n",color);
+    screen.bg_color=color;
+    return mrb_fixnum_value(color);
+}
 void initialize_mrb_namespace(mrb_state *mrb){
     struct RClass *root_module;    
     root_module = mrb_define_module(mrb,"Liteperf");
-    mrb_define_module_function(mrb,root_module,"flip",flip_method,MRB_ARGS_NONE());
-    mrb_define_module_function(mrb,root_module,"draw_image",flip_method,MRB_ARGS_ARG(1,1));
+    mrb_define_module_function(mrb,root_module,"wait_for_vsync",flip_method,MRB_ARGS_NONE());
+    mrb_define_module_function(mrb,root_module,"clear_screen",clear_screen_method,MRB_ARGS_NONE());
+    mrb_define_module_function(mrb,root_module,"draw_rect",draw_rect_method,MRB_ARGS_ARG(4,1));
+    mrb_define_module_function(mrb,root_module,"draw_text",draw_text_method,MRB_ARGS_REQ(3));
+    mrb_define_module_function(mrb,root_module,"foreground_color=",set_fgcolor_method,MRB_ARGS_REQ(1));
+    mrb_define_module_function(mrb,root_module,"background_color=",set_bgcolor_method,MRB_ARGS_REQ(1));
+    mrb_define_module_function(mrb,root_module,"background_color",get_bgcolor_method,MRB_ARGS_NONE());
+    mrb_define_module_function(mrb,root_module,"foreground_color",get_fgcolor_method,MRB_ARGS_NONE());
+    //mrb_define_module_function(mrb,root_module,"draw_image",flip_method,MRB_ARGS_ARG(1,1));
 
 }
 
@@ -58,7 +109,7 @@ int main(int argc,const char *argv[]){
         return 1;
     }
     //printf("Argc: %d \tA1: %s\tA2: %s\tA3: %s\n",argc,argv[0],argv[1],argv[2]);
-    font_info* font= create_font_info(&arial_bold);
+    font = create_font_info(&arial_bold);
     // Allocate the framebuffer.
     init_fb(argv[1],&screen);
 
@@ -75,23 +126,14 @@ int main(int argc,const char *argv[]){
     mrb_value obj = mrb_load_file(mrb,fp);
     fclose(fp);
 
-    // call some initialize method?
-    mrb_int i = 99;
-    mrb_funcall(mrb, obj, "setup", 1, mrb_fixnum_value(i));
+    screen.fg_color=0xff000000;
+    screen.bg_color=0xffffffff;
 
-
-    // Paint pretty colors.
-    int k=0;
+    mrb_funcall(mrb, obj, "setup", 0);
     while(run){
-        fill_screen(&screen,rand() & 0xffffffff);
-        draw_square(&screen,100+k,30,50,60+k,0x541212);
-        k=(k+10)%50;
-        draw_char(&screen,font,'A',0,0);
-        draw_char(&screen,font,'C',24,0);
-        draw_char(&screen,font,'9',48,0);
+        clear_screen(&screen);
+        mrb_funcall(mrb, obj, "loop", 0);
         blit(&screen);
-        sleep(1);
-        mrb_funcall(mrb, obj, "loop", 1, mrb_fixnum_value(i));
     }
     // Destroy the mruby runtime.
     mrb_close(mrb);

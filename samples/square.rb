@@ -1,8 +1,19 @@
+puts "kekbork"
+def setup
+	puts "Initalizing"
+	#Liteperf.background_color=0x123456
+	#Liteperf.background_color=0x123456
+	
+end
 
-puts "Sample square is running executing."
+def loop
+	i=150	
+	
+	#puts "looping "
+	#Liteperef.background_color=0xff00ff
+	#
+	Liteperf.draw_text("#{Time.now}",-8,i)
 
-puts Liteperf.flip
-
-def draw(some_int=0)
-	puts "Ruby: draw called from C++ with arg #{some_int}"
+	#Liteperf.clear_screen
+	#puts "loop complete"
 end
