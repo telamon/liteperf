@@ -13,6 +13,9 @@
 #elif defined(__arm__)
 	#define PROGMEM
 	#define fontdatatype const unsigned char
+#else
+	#define PROGMEM
+	#define fontdatatype const unsigned char
 #endif
 
 fontdatatype arial_bold[3044] PROGMEM={
