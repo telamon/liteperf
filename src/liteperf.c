@@ -2,7 +2,6 @@
 #include <mruby.h>
 #include <mruby/compile.h>
 #include "arial_bold.c"
-
 static int run=1;
 static void exitHandler(int s){
 	run = 0;

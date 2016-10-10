@@ -9,7 +9,6 @@
 #include <string.h>
 
 
-
 typedef unsigned char uint8_t;
 
 typedef struct {

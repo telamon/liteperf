@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (liteperf)
 
-add_executable(liteperf src/liteperf.c)
+add_executable(liteperf src/fbgfx.cc src/main.cc)
 
 include_directories("${PROJECT_SOURCE_DIR}/mruby/include/")
 
