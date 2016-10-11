@@ -1,47 +1,45 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <linux/fb.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-#include <signal.h>
-#include <string.h>
-
-
-
-typedef unsigned char uint8_t;
-
-typedef struct {
-	struct fb_var_screeninfo vinfo;
-    struct fb_fix_screeninfo finfo;
-	int fbfd;
-	char *front;
-	long int screensize;
-    char *back;
-    unsigned int fg_color;
-    unsigned int bg_color;
-} session;
-
-typedef struct
-{
-    uint8_t* font;
-    uint8_t x_size;
-    uint8_t y_size;
-    uint8_t offset;
-    uint8_t numchars;
-} font_info;
-
+#include "fbgfx.h"
 
 //#define COORDS_TO_LOC(s,x,y) (((x)+scr->vinfo.xoffset) * (scr->vinfo.bits_per_pixel/8) + ((y)+scr->vinfo.yoffset) * scr->finfo.line_length)
 
-// 565 format.
-#define RGBA32_TO_BGR16(c) ( ((((c)>>3)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>19)&31) )
-#define RGBA32_TO_RGB16(c) ( ((((c)>>19)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>3)&31) )
+void init_fb(const char *device,session *scr){
 
-/******************************************************
- *** This belongs in framebuffer.c ********************
- ******************************************************/
+    // Open the file for reading and writing
+    scr->fbfd = open(device, O_RDWR);
+    if (scr->fbfd == -1) {
+        perror("Error: cannot open framebuffer device");
+        exit(1);
+    }
+    printf("The framebuffer device was opened successfully.\n");
+
+    // Get fixed screen information
+    if (ioctl(scr->fbfd, FBIOGET_FSCREENINFO, &(scr->finfo)) == -1) {
+        perror("Error reading fixed information");
+        exit(2);
+    }
+
+    // Get variable screen information
+    if (ioctl(scr->fbfd, FBIOGET_VSCREENINFO, &(scr->vinfo)) == -1) {
+        perror("Error reading variable information");
+        exit(3);
+    }
+
+    printf("%dx%d, %dbpp\n", scr->vinfo.xres, scr->vinfo.yres, scr->vinfo.bits_per_pixel);
+
+    // Figure out the size of the screen in bytes
+    scr->screensize = scr->vinfo.xres * scr->vinfo.yres * scr->vinfo.bits_per_pixel / 8;
+    scr->back = malloc(scr->screensize);
+
+    // Map the device to memory
+    scr->front = (char *)mmap(0, scr->screensize, PROT_READ | PROT_WRITE, MAP_SHARED, scr->fbfd, 0);
+    if ((long)scr->front == -1) {
+        perror("Error: failed to map framebuffer device to memory");
+        exit(4);
+    }
+    printf("The framebuffer device was mapped to memory successfully.\n");
+}
+
+
 void destroy_fb(session *scr){
     munmap(scr->front, scr->screensize);
     close(scr->fbfd);
@@ -150,39 +148,3 @@ void clear_screen(session* scr){
     fill_screen(scr,scr->bg_color);
 }
 
-void init_fb(const char *device,session *scr){
-
-    // Open the file for reading and writing
-    scr->fbfd = open(device, O_RDWR);
-    if (scr->fbfd == -1) {
-        perror("Error: cannot open framebuffer device");
-        exit(1);
-    }
-    printf("The framebuffer device was opened successfully.\n");
-
-    // Get fixed screen information
-    if (ioctl(scr->fbfd, FBIOGET_FSCREENINFO, &(scr->finfo)) == -1) {
-        perror("Error reading fixed information");
-        exit(2);
-    }
-
-    // Get variable screen information
-    if (ioctl(scr->fbfd, FBIOGET_VSCREENINFO, &(scr->vinfo)) == -1) {
-        perror("Error reading variable information");
-        exit(3);
-    }
-
-    printf("%dx%d, %dbpp\n", scr->vinfo.xres, scr->vinfo.yres, scr->vinfo.bits_per_pixel);
-
-    // Figure out the size of the screen in bytes
-    scr->screensize = scr->vinfo.xres * scr->vinfo.yres * scr->vinfo.bits_per_pixel / 8;
-    scr->back = malloc(scr->screensize);
-
-    // Map the device to memory
-    scr->front = (char *)mmap(0, scr->screensize, PROT_READ | PROT_WRITE, MAP_SHARED, scr->fbfd, 0);
-    if ((long)scr->front == -1) {
-        perror("Error: failed to map framebuffer device to memory");
-        exit(4);
-    }
-    printf("The framebuffer device was mapped to memory successfully.\n");
-}

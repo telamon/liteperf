@@ -1,6 +1,13 @@
-#include "liteperf.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <signal.h>
+
+
 #include <mruby.h>
 #include <mruby/compile.h>
+
+#include "fbgfx.h"
 #include "arial_bold.c"
 
 static int run=1;
