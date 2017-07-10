@@ -130,7 +130,7 @@ int main(int argc,const char *argv[]){
     while(run){
         clear_screen(&screen);
         // DO things!
-        fill_screen(&screen,0xffAACCDDEE; 
+        fill_screen(&screen,0xffAACCDDEE); 
         blit(&screen);
     }
     // Release the framebuffer.
