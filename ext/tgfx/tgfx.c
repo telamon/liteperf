@@ -37,6 +37,24 @@ VALUE method_draw_rect(VALUE self, VALUE x, VALUE y, VALUE w, VALUE h){
 	return Qnil;
 }
 
+VALUE method_set_fg(VALUE self,VALUE rgba){
+    screen.fg_color=NUM2UINT(rgba);
+	return UINT2NUM(screen.fg_color);
+}
+VALUE method_get_fg(VALUE self){
+	return UINT2NUM(screen.fg_color);
+}
+VALUE method_set_bg(VALUE self,VALUE rgba){
+    screen.bg_color=NUM2UINT(rgba);
+	return UINT2NUM(screen.bg_color);
+}
+VALUE method_get_bg(VALUE self){
+	return UINT2NUM(screen.bg_color);
+}
+VALUE method_draw_text(VALUE self,VALUE text,VALUE x,VALUE y){
+	draw_text(&screen,font,StringValueCStr(text),UINT2NUM(x),UINT2NUM(y));
+	return Qnil;
+}
 void Init_tgfx(){
 	TGfx = rb_define_module("TGfx");
 	FB = rb_define_module_under(TGfx,"FB");
@@ -45,6 +63,11 @@ void Init_tgfx(){
 	rb_define_singleton_method(FB,"sync",method_sync,0);
 	rb_define_singleton_method(FB,"clear_screen",method_clear_screen,0);
 	rb_define_singleton_method(FB,"draw_rect",method_draw_rect,5);
+	rb_define_singleton_method(FB,"foreground_color=",method_set_fg,1);
+	rb_define_singleton_method(FB,"foreground_color",method_get_fg,0);
+	rb_define_singleton_method(FB,"background_color=",method_set_bg,1);
+	rb_define_singleton_method(FB,"background_color",method_get_bg,0);
+	rb_define_singleton_method(FB,"draw_text",method_draw_text,3);
 
     /*
     mrb_define_module_function(mrb,root_module,"draw_rect",draw_rect_method,MRB_ARGS_ARG(4,1));
