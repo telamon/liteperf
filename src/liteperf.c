@@ -4,8 +4,6 @@
 #include <signal.h>
 
 
-#include <mruby.h>
-#include <mruby/compile.h>
 
 #include "fbgfx.h"
 #include "arial_bold.c"
@@ -24,10 +22,11 @@ static void catchSignals (void){
 }
 static session screen;
 static font_info* font;
+
 /******************************************************
  *** Mruby integration ********************************
  ******************************************************/
-
+/*
 mrb_value flip_method(mrb_state* mrb, mrb_value self){
     blit(&screen);
     return mrb_nil_value();
@@ -106,15 +105,15 @@ void initialize_mrb_namespace(mrb_state *mrb){
     // TODO: export current session info (vsize/hsize) as constants.
 
 }
-
+*/
 /******************************************************
  *** Entrypoint ***************************************
  ******************************************************/
 
 int main(int argc,const char *argv[]){
 
-    if(argc<3){
-        printf("Usage: liteperf /dev/fb0 examples/cpu.rb\n");
+    if(argc<2){
+        printf("Usage: liteperf /dev/fb0\n");
         return 1;
     }
     //printf("Argc: %d \tA1: %s\tA2: %s\tA3: %s\n",argc,argv[0],argv[1],argv[2]);
@@ -124,28 +123,16 @@ int main(int argc,const char *argv[]){
 
 
     catchSignals(); 
-    // Initialize mruby
-    mrb_state *mrb = mrb_open();
-    if (!mrb) { }
-    // Initialize the Liteperf class in mruby
-    initialize_mrb_namespace(mrb);
-
-    // Open and load the script provided as second argument.
-    FILE *fp = fopen(argv[2],"r");
-    mrb_value obj = mrb_load_file(mrb,fp);
-    fclose(fp);
 
     screen.fg_color=0xff000000;
     screen.bg_color=0xffffffff;
 
-    mrb_funcall(mrb, obj, "setup", 0);
     while(run){
         clear_screen(&screen);
-        mrb_funcall(mrb, obj, "loop", 0);
+        // DO things!
+        fill_screen(&screen,0xffAACCDDEE; 
         blit(&screen);
     }
-    // Destroy the mruby runtime.
-    mrb_close(mrb);
     // Release the framebuffer.
     free(font);
     destroy_fb(&screen);
