@@ -94,8 +94,8 @@ void draw_char(session *scr,font_info* cfont,unsigned char c,int x, int y){
         int y1= y + ( j / bwidth );
         int x2= x + cfont->x_size-1;
         int y2= y + ( j / bwidth );
-        
-        for( int zz = bwidth - 1 ; zz >= 0 ; zz-- ){
+        int zz; 
+        for( zz = bwidth - 1 ; zz >= 0 ; zz-- ){
             ch = *( &cfont->font[temp+zz] );
 
             for( i = 0 ; i < 8 ; i++ ){   
@@ -116,7 +116,8 @@ void draw_char(session *scr,font_info* cfont,unsigned char c,int x, int y){
 void draw_text(session* scr,font_info* cfont,const unsigned char* string,int x, int y){
     int oy=0;
     int ox=0;
-    for(int i=0; i< strlen(string); i++){
+    int i;
+    for(i=0; i< strlen(string); i++){
         ox+=cfont->x_size>>1;
         if(string[i]=='\n'){
             ox=0;
@@ -128,8 +129,9 @@ void draw_text(session* scr,font_info* cfont,const unsigned char* string,int x, 
 }
 
 void draw_rect(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsigned int h,unsigned int rgba){
-    for(int y = oy;y<h+oy;y++)
-    for(int x = ox;x<w+ox;x++){
+    int x,y;
+    for(y = oy;y<h+oy;y++)
+    for(x = ox;x<w+ox;x++){
         put_pixel(scr,x,y,rgba);
     };
 }
