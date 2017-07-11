@@ -61,7 +61,9 @@ void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba);
 
 #define put_pixel(scr,x,y,color) \
 ( \
+   (x)+(y)*(scr)->vinfo.xres >=0 && (x)+(y)*(scr)->vinfo.xres < (scr)->vinfo.xres * (scr)->vinfo.yres ? ( \
     (scr)->vinfo.bits_per_pixel==32 ? put_pixel32((scr),(x),(y),(color)) : put_pixel16((scr),(x),(y),(color)) \
+    ) : 0 \
 )
 
 #endif
