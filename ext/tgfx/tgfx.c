@@ -11,7 +11,6 @@ static session screen;
 static font_info* font;
 
 VALUE TGfx = Qnil;
-VALUE FB = Qnil;
 /*-------------------------------------*/
 
 VALUE method_init(VALUE self, VALUE device){
@@ -78,26 +77,34 @@ VALUE method_draw_image(VALUE self,VALUE data,VALUE ox,VALUE oy,VALUE scansize){
 		}
 	return Qnil;
 }
+VALUE method_destroy(VALUE self){
+	destroy_fb(&screen);
+	return Qnil;
+}
+VALUE method_get_height(VALUE self){
+	return UINT2NUM(screen.vinfo.yres);
+}
+VALUE method_get_width(VALUE self){
+	return UINT2NUM(screen.vinfo.xres);
+}
+VALUE method_get_depth(VALUE self){
+	return UINT2NUM(screen.vinfo.bits_per_pixel);
+}
+
 void Init_tgfx(){
 	TGfx = rb_define_module("TGfx");
-	FB = rb_define_module_under(TGfx,"FB");
-
-	rb_define_singleton_method(FB,"init",method_init,1);
-	rb_define_singleton_method(FB,"sync",method_sync,0);
-	rb_define_singleton_method(FB,"clear_screen",method_clear_screen,0);
-	rb_define_singleton_method(FB,"draw_rect",method_draw_rect,4);
-	rb_define_singleton_method(FB,"foreground_color=",method_set_fg,1);
-	rb_define_singleton_method(FB,"foreground_color",method_get_fg,0);
-	rb_define_singleton_method(FB,"background_color=",method_set_bg,1);
-	rb_define_singleton_method(FB,"background_color",method_get_bg,0);
-	rb_define_singleton_method(FB,"draw_text",method_draw_text,3);
-	rb_define_singleton_method(FB,"draw_image",method_draw_image,4);
-    /*
-    mrb_define_module_function(mrb,root_module,"draw_rect",draw_rect_method,MRB_ARGS_ARG(4,1));
-    mrb_define_module_function(mrb,root_module,"draw_text",draw_text_method,MRB_ARGS_REQ(3));
-    mrb_define_module_function(mrb,root_module,"foreground_color=",set_fgcolor_method,MRB_ARGS_REQ(1));
-    mrb_define_module_function(mrb,root_module,"background_color=",set_bgcolor_method,MRB_ARGS_REQ(1));
-    mrb_define_module_function(mrb,root_module,"background_color",get_bgcolor_method,MRB_ARGS_NONE());
-    mrb_define_module_function(mrb,root_module,"foreground_color",get_fgcolor_method,MRB_ARGS_NONE());
-    //mrb_define_module_function(mrb,root_module,"draw_image",flip_method,MRB_ARGS_ARG(1,1));*/
+	rb_define_singleton_method(TGfx,"init",method_init,1);
+	rb_define_singleton_method(TGfx,"sync",method_sync,0);
+	rb_define_singleton_method(TGfx,"clear_screen",method_clear_screen,0);
+	rb_define_singleton_method(TGfx,"draw_rect",method_draw_rect,4);
+	rb_define_singleton_method(TGfx,"fg=",method_set_fg,1);
+	rb_define_singleton_method(TGfx,"fg",method_get_fg,0);
+	rb_define_singleton_method(TGfx,"bg=",method_set_bg,1);
+	rb_define_singleton_method(TGfx,"bg",method_get_bg,0);
+	rb_define_singleton_method(TGfx,"draw_text",method_draw_text,3);
+	rb_define_singleton_method(TGfx,"draw_image",method_draw_image,4);
+	rb_define_singleton_method(TGfx,"destroy",method_destroy,0);
+	rb_define_singleton_method(TGfx,"fb_height",method_get_height,0);
+	rb_define_singleton_method(TGfx,"fb_width",method_get_width,0);
+	rb_define_singleton_method(TGfx,"fb_depth",method_get_depth,0);
 }
