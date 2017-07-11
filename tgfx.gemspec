@@ -12,6 +12,4 @@ Gem::Specification.new do |s|
   s.extensions << "ext/tgfx/extconf.rb"
 
   s.add_development_dependency "rake-compiler"
-  s.add_development_dependency "pry"
-  s.add_development_dependency "chunky_png"
 end
