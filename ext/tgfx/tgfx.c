@@ -74,7 +74,7 @@ VALUE method_draw_image(VALUE self,VALUE data,VALUE ox,VALUE oy,VALUE scansize){
 	int x,y,w = NUM2UINT(scansize),h = RARRAY_LEN(data) / w;
 	for(y=0;y<h;y++)
 		for(x=0;x<w;x++){
-			put_pixel(&screen,ox+x,oy+y, NUM2UINT(rb_ary_entry(data, y*w+x)));
+			put_pixel(&screen,NUM2UINT(ox)+x,NUM2UINT(oy)+y, NUM2UINT(rb_ary_entry(data, y*w+x)));
 		}
 	return Qnil;
 }
