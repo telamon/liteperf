@@ -28,7 +28,7 @@ TGfx.draw_text("Hello tgfx/fbgfx",20,10)
 
 # Draw a random colored square in lower-left
 TGfx.fg= (rand * 0xffffff).to_i
-TGfx.draw_rect 0,TGfx.fb_height - 10,32,32
+TGfx.draw_rect 0,TGfx.fb_height - 42,32,32
 
 # Important `sync` method draws the actual frame to the screen
 # and returns when finished, nothing will get displayed
