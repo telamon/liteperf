@@ -16,6 +16,8 @@ GEM
     rake (12.0.0)
     rake-compiler (1.0.4)
       rake
+    rasem (0.7.1)
+    rmagick (2.16.0)
     slop (3.6.0)
 
 PLATFORMS
@@ -25,6 +27,8 @@ DEPENDENCIES
   chunky_png
   pry
   rake-compiler
+  rasem
+  rmagick
   tgfx!
 
 BUNDLED WITH

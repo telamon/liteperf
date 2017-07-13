@@ -90,7 +90,10 @@ VALUE method_get_width(VALUE self){
 VALUE method_get_depth(VALUE self){
 	return UINT2NUM(screen.vinfo.bits_per_pixel);
 }
-
+VALUE method_put_pixel(VALUE self, VALUE x, VALUE y, VALUE color){
+	put_pixel(&screen,NUM2UINT(x),NUM2UINT(y),NUM2UINT(color));
+	return Qnil;
+}
 void Init_tgfx(){
 	TGfx = rb_define_module("TGfx");
 	rb_define_singleton_method(TGfx,"init",method_init,1);

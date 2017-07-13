@@ -5,3 +5,5 @@ gemspec
 
 gem "pry"
 gem "chunky_png"
+gem "rmagick"
+gem "rasem"

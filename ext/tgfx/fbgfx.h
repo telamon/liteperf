@@ -50,7 +50,6 @@ void draw_rect(session *scr,unsigned int ox,unsigned int oy,unsigned int w,unsig
 void fill_screen(session* scr,unsigned int rgba);
 void clear_screen(session* scr);
 
-
 void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba);
 
 #define put_pixel16(scr,x,y,color) \
