@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="960"
+   height="640"
+   viewBox="0 0 254 169.33333"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="clock.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="444.8414"
+     inkscape:cy="335.6296"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:snap-page="true"
+     inkscape:snap-text-baseline="false"
+     inkscape:window-width="2454"
+     inkscape:window-height="1401"
+     inkscape:window-x="106"
+     inkscape:window-y="39"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-127.66669)">
+    <rect
+       style="fill:#8adcff;fill-opacity:1;stroke-width:1.1481874"
+       id="rect5036"
+       width="254"
+       height="169.33334"
+       x="0"
+       y="127.66669" />
+    <path
+       style="fill:#caffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 254,253.15479 c 0,0 12.85118,-11.33929 -47.43601,-17.00893 -60.28721,-5.66965 -73.51637,39.49851 -130.401789,36.28571 C 19.276786,269.21877 0,207.23068 0,207.23068 v 89.76935 h 254 l 0,-10.96131"
+       id="path5178"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csscccc" />
+    <ellipse
+       style="fill:#966855;fill-opacity:1;stroke-width:0.53192204"
+       id="kdke"
+       cx="221.12375"
+       cy="211.57741"
+       rx="76.721474"
+       ry="75.40625" />
+    <flowRoot
+       xml:space="preserve"
+       id="time"
+       style="font-style:normal;font-weight:500;font-size:64px;line-height:125%;font-family:Ubuntu;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffd0e2;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;-inkscape-font-specification:'Ubuntu Medium';font-stretch:normal;font-variant:normal;"
+       transform="matrix(0.26458333,0,0,0.26458333,-28.159226,142.40776)"
+       inkscape:label="#time"><flowRegion
+         id="flowRegion5042"
+         style="font-size:64px;text-align:center;text-anchor:middle;fill:#ffd0e2;fill-opacity:1;-inkscape-font-specification:'Ubuntu Medium';font-family:Ubuntu;font-weight:500;font-style:normal;font-stretch:normal;font-variant:normal;"><rect
+           id="rect5044"
+           width="259.28571"
+           height="115"
+           x="723.57141"
+           y="148.57143"
+           style="font-size:64px;text-align:center;text-anchor:middle;fill:#ffd0e2;fill-opacity:1;-inkscape-font-specification:'Ubuntu Medium';font-family:Ubuntu;font-weight:500;font-style:normal;font-stretch:normal;font-variant:normal;" /></flowRegion><flowPara
+         id="flowPara5046">12:34</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="dow"
+       style="font-style:normal;font-weight:normal;font-size:37.33333206px;line-height:125%;font-family:Ubuntu;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffd0e2;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;-inkscape-font-specification:Ubuntu;font-stretch:normal;font-variant:normal;"
+       transform="matrix(0.26458333,0,0,0.26458333,-29.460436,162.88262)"><flowRegion
+         id="flowRegion5042-6"
+         style="font-size:37.33333206px;text-align:center;text-anchor:middle;fill:#ffd0e2;fill-opacity:1;-inkscape-font-specification:Ubuntu;font-family:Ubuntu;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"><rect
+           id="rect5044-7"
+           width="259.28571"
+           height="115"
+           x="723.57141"
+           y="148.57143"
+           style="font-size:37.33333206px;text-align:center;text-anchor:middle;fill:#ffd0e2;fill-opacity:1;-inkscape-font-specification:Ubuntu;font-family:Ubuntu;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;" /></flowRegion><flowPara
+         id="flowPara5046-5">Wednesday</flowPara></flowRoot>    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.26458332"
+       id="rect5132"
+       width="41.766369"
+       height="43.65625"
+       x="175.00298"
+       y="225.37354" />
+    <flowRoot
+       xml:space="preserve"
+       id="day"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:64px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Medium';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#55033d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.1889881,128.61163)"><flowRegion
+         id="flowRegion5136"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:64px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Medium';text-align:center;text-anchor:middle;fill:#55033d;fill-opacity:1;"><rect
+           id="rect5138"
+           width="89.285713"
+           height="79.285713"
+           x="697.85712"
+           y="389.28571"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:64px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Medium';text-align:center;text-anchor:middle;fill:#55033d;fill-opacity:1;" /></flowRegion><flowPara
+         id="flowPara5140">7</flowPara></flowRoot>    <flowRoot
+       transform="matrix(0.26458333,0,0,0.26458333,-9.2573335,152.90428)"
+       xml:space="preserve"
+       id="monthyear"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.66666794px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#55033d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+         id="flowRegion5136-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.66666794px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;fill:#55033d;fill-opacity:1"><rect
+           id="rect5138-9"
+           width="156.41696"
+           height="70.328117"
+           x="697.85712"
+           y="389.28571"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.66666794px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;fill:#55033d;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara5140-0">May 2017</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="degrees"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:53.33333588px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';letter-spacing:0px;word-spacing:0px;fill:#00656d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       transform="matrix(0.26458333,0,0,0.26458333,0,127.66669)"><flowRegion
+         id="flowRegion5168"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:53.33333588px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';fill:#00656d;fill-opacity:1;"><rect
+           id="rect5170"
+           width="117.85715"
+           height="66.428581"
+           x="102.14286"
+           y="88.571426"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:53.33333588px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';fill:#00656d;fill-opacity:1;" /></flowRegion><flowPara
+         id="flowPara5172">19</flowPara></flowRoot>  </g>
+</svg>
