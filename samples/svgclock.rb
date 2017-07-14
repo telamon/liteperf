@@ -13,7 +13,7 @@ begin
     height= TGfx.fb_height
   end
 
-  svg = Nokogiri::XML.parse File.read(File.expand_path('../clock.svg',__FILE__))
+  svg = Nokogiri::XML.parse File.read(File.expand_path('../clock-plain.svg',__FILE__))
   svg.css("#dow flowPara").first.content= Time.now.wday
   svg.css("#monthyear flowPara").first.content = Time.now.strftime("%b %Y")
   svg.css("#day flowPara").first.content= Time.now.day

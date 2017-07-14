@@ -36,8 +36,17 @@ typedef struct
 } font_info;
 
 // 565 format.
-#define RGBA32_TO_BGR16(c) ( ((((c)>>3)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>19)&31) )
-#define RGBA32_TO_RGB16(c) ( ((((c)>>19)&31) << 11) | ((((c)>>10)&63) << 5) | (((c)>>3)&31) )
+#define RGBA32_TO_BGR16(c) ( \
+    ((((c)>>3)&31) << 11) | \
+    ((((c)>>10)&63) << 5) | \
+    (((c)>>19)&31) \
+)
+
+#define RGBA32_TO_RGB16(c) ( \
+    ((((c)>>19)&31) << 11) | \
+    ((((c)>>10)&63) << 5) | \
+    (((c)>>3)&31) \
+)
 
 // Gfx
 void init_fb(const char *device,session *scr);
