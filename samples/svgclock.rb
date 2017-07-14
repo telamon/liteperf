@@ -25,8 +25,10 @@ begin
   img.resize_to_fill! width, height
 
   if use_hw 
-    raster = img.to_blob{ self.format='rgba'}
-    TGfx.draw_image raster.unpack("L*"), 0,0,width
+    half = false
+    raster = img.to_blob{ self.format='rgba'}.unpack("L*").select{|i| half=!half } 
+    
+    TGfx.draw_image raster, 0,0,width
     TGfx.sync
   else
     raster = img.to_blob{ self.format='png'}

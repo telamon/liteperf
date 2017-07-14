@@ -64,7 +64,7 @@ void put_pixel32(session *scr,unsigned int x,unsigned int y,unsigned int rgba);
 #define put_pixel16(scr,x,y,color) \
 ( \
     *((unsigned short int*)((scr)->back + ( (x) * ( (scr)->vinfo.bits_per_pixel/8) + (y) * (scr)->finfo.line_length) )) \
-    = RGBA32_TO_RGB16(color) \
+    = RGBA32_TO_BGR16(color) \
 )
 
 #define put_pixel(scr,x,y,color) \
