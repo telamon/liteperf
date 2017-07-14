@@ -29,7 +29,7 @@ begin
   # For some reason RMagick outputs duplicate sets of components.
   # We have to strip them away, seems this is only raspberry/arm related...
   raster = raster.in_groups_of(6).map do |group|
-    binding.pry 
+     (group[4] | group[2] << 8 | group[0] << 16)
   end
 
   if use_hw 
@@ -39,6 +39,7 @@ begin
     raster = img.to_blob{ self.format='png'}
     File.write(File.expand_path("../out.png",__FILE__),raster)
   end
+
 rescue Exception => e
   if use_hw
     puts e
