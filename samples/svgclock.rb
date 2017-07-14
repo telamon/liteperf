@@ -25,9 +25,13 @@ begin
   img.resize_to_fill! width, height
 
   if use_hw 
-    half = false
-    raster = img.to_blob{ self.format='rgba'}.unpack("L*").select{|i| half=!half } 
-    
+    # Extract the pixel data into RGBA-format compatible with TGfx
+    raster = img.to_blob{ self.format='rgb'}.unpack("C*")
+    # For some reason RMagick outputs duplicate sets of components.
+    # We have to strip them away
+    raster = raster.in_groups_of(6) do |group|
+    end
+    binding.pry 
     TGfx.draw_image raster, 0,0,width
     TGfx.sync
   else
