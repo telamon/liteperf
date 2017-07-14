@@ -33,5 +33,10 @@ begin
     File.write(File.expand_path("../out.png",__FILE__),raster)
   end
 rescue Exception => e
-  TGfx.destroy
+  if use_hw
+    puts e
+    TGfx.destroy
+  else
+    raise e
+  end
 end
