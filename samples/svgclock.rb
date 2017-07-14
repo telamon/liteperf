@@ -4,6 +4,7 @@ require 'pry'
 require 'tgfx'
 require 'rmagick'
 require 'nokogiri'
+require 'active_support/all'
 begin
   width,height=[420,320]
   use_hw = File.exists? '/dev/fb1'
@@ -23,15 +24,15 @@ begin
     self.background_color = 'black'
   }
   img.resize_to_fill! width, height
+  # Extract the pixel data into RGBA-format compatible with TGfx
+  raster = img.to_blob{ self.format='rgb'}.unpack("C*")
+  # For some reason RMagick outputs duplicate sets of components.
+  # We have to strip them away, seems this is only raspberry/arm related...
+  raster = raster.in_groups_of(6).map do |group|
+    binding.pry 
+  end
 
   if use_hw 
-    # Extract the pixel data into RGBA-format compatible with TGfx
-    raster = img.to_blob{ self.format='rgb'}.unpack("C*")
-    # For some reason RMagick outputs duplicate sets of components.
-    # We have to strip them away
-    raster = raster.in_groups_of(6) do |group|
-    end
-    binding.pry 
     TGfx.draw_image raster, 0,0,width
     TGfx.sync
   else

@@ -7,3 +7,5 @@ gem "pry"
 gem "rmagick"
 gem "nokogiri"
 gem "chunky_png"
+gem "activesupport"
+
