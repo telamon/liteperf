@@ -3,3 +3,4 @@ tmp/*
 liteperf.c
 *.so
 vendor/bundle/
+samples/out.png
