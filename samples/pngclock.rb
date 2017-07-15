@@ -5,7 +5,7 @@ require 'tgfx'
 require 'rmagick'
 require 'nokogiri'
 require 'active_support/all'
-
+require 'open-uri'
 Kalvin = 273.15
 IconCache={}
 def forecast
