@@ -4,3 +4,5 @@ liteperf.c
 *.so
 vendor/bundle/
 samples/out.png
+omw_api.key
+samples/forecast.json
