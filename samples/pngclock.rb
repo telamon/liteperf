@@ -19,31 +19,32 @@ def forecast
   forecast_file = File.expand_path("../forecast.json",__FILE__)
   data=nil
   if File.exists?(forecast_file) && Time.now - File.ctime(forecast_file) < 60
-    data = JSON.parse File.read(forecast_file)
+    data = JSON.parse File.read(forecast_file), symbolize_names: true
   else
     res = open("http://api.openweathermap.org/data/2.5/weather?q=#{CGI.escape(city)}&APPID=#{key}").read
     File.write forecast_file, res
-    data = JSON.parse res
+    data = JSON.parse res, symbolize_names: true
   end
-  data["main"]["tempc"] = data["main"]["temp"] - Kalvin
-  data["main"]["temp_minc"] = data["main"]["temp_min"] - Kalvin
-  data["main"]["temp_maxc"] = data["main"]["temp_max"] - Kalvin
-  icon_id= data["weather"].first.try(:[],"icon")
-  data["icon_url"] =  "http://openweathermap.org/img/w/#{icon_id}.png"
+  data[:main][:tempc] = data[:main][:temp] - Kalvin
+  data[:main][:temp_minc] = data[:main][:temp_min] - Kalvin
+  data[:main][:temp_maxc] = data[:main][:temp_max] - Kalvin
+  icon_id= data[:weather].first.try(:[],:icon)
+  data[:icon_url] =  "http://openweathermap.org/img/w/#{icon_id}.png"
   unless IconCache[icon_id]
-    IconCache[icon_id] = Magick::Image.from_blob(open(data["icon_url"]).read).first
+    IconCache[icon_id] = Magick::Image.from_blob(open(data[:icon_url]).read).first
   end
-  data["icon"]=IconCache[icon_id]
-  data["wdesc"] = data["weather"].first.try(:[],'description').try(:camelcase)
+  data[:icon]=IconCache[icon_id]
+  data[:wdesc] = data[:weather].first.try(:[],:description).try(:camelcase)
   data
 end
+
 def humanize secs
   [[60, :s], [60, :m], [24, :h], [1000, :d]].map{ |count, name|
     if secs > 0
       secs, n = secs.divmod(count)
       "#{n.to_i}#{name}" if n > 0
     end
-  }.compact.reverse.join('')
+  }.compact.reverse.join('').gsub(/^(\d+d\d+h)\d+m\d+s/,'\1')
 end
 begin
   LightPink = "#ffd0e2"
@@ -87,24 +88,29 @@ begin
     text.pointsize = 42
     text.fill = "#030755" # cold-black
     text.font_weight= Magick::BoldWeight
-    img.annotate text, 65,42, 45, 20, "#{forecast["main"]["tempc"].round}C" #\u2103"
+    img.annotate text, 65,42, 45, 20, "#{forecast[:main][:tempc].round}C" #\u2103"
     # weather icon & description
-    img.composite! forecast["icon"], 2,12, Magick::OverCompositeOp
+    img.composite! forecast[:icon], 2,12, Magick::OverCompositeOp
     text.pointsize = 20
-    img.annotate text, 65,100, 45, 18, "#{forecast["wdesc"]}"
+    img.annotate text, 65,100, 45, 18, "#{forecast[:wdesc]}"
 
     # misc lines
     lines=[]
-    if forecast["rain"]
-      forecast["rain"].map{|h,c| "#{(c*100).round}% ~#{h}"}.join(", ")
-    else
-      lines << "No rain today!"
+
+    # Rain object from forecast.
+    if forecast[:rain]
+      forecast[:rain].map{|h,c| "#{(c*100).round}% ~#{h}"}.join(", ")
     end
-    if forecast["sys"]["sunrise"] > Time.now.to_i
-      lines <<  "Sunrise in " + humanize( forecast["sys"]["sunrise"] - Time.now.to_i)
-    else
-      lines << "Sunset in" + humanize( forecast["sys"]["sunset"] - Time.now.to_i)
+
+    # Sun-rise/set
+    if forecast[:sys][:sunrise] > Time.now.to_i
+      lines <<  "Sunrise in " + humanize( forecast[:sys][:sunrise] - Time.now.to_i)
+    elsif forecast[:sys][:sunset] > Time.now.to_i
+      lines << "Sunset in " + humanize( forecast[:sys][:sunset] - Time.now.to_i)
     end
+    lines << "Humidity: #{forecast[:main][:humidity]}%"
+    lines << "Pressure: #{forecast[:main][:pressure]}"
+    lines << "Tony's birthday: #{humanize(Time.parse("09/08/2017 00:00") - Time.now)}"
     y = 80
     text.pointsize = 20
     lines.each do |line|
